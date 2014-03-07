@@ -1,0 +1,34 @@
+
+# transistor level
+
+ckt and a b z
+q1 vcc a z p
+q2 vcc b z p
+q3 vcc a n1 n
+q4 n1 b z n
+end
+
+ckt or a z
+q3 vcc a n1 p
+q4 n1 b z p
+q1 vss a z n
+q2 vss b z n
+end
+
+ckt not a z
+q1 vcc a o p
+q2 vss a o n
+end
+
+# gate level
+
+ckt top a b c d e f z1 z2 
+i1 b c n1 and 
+i2 d e and 
+i3 f n3 not
+i4 a n1 n4 or
+i5 n1 n2 n5 or 
+i6 n2 n3 n6 or 
+i7 n4 n5 z1 and
+i8 n6 z2 not
+end
