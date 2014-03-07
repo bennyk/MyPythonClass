@@ -2,6 +2,7 @@ import re
 import collections.abc
 from calculator2 import Number, Variable, Vector2, Functor
 
+
 class Tokenizer:
     def __init__(self, expr):
         assert isinstance(expr, str)
@@ -19,18 +20,22 @@ class Tokenizer:
 
     def getRemainingString(self):
         return self._str[self._start:]
+
     remainingString = property(getRemainingString)
 
     def getCurrentLiteral(self):
         return self._str[self._prev:self._start]
+
     currentLiteral = property(getCurrentLiteral)
 
     def getCurrentToken(self):
         return self._token
+
     currentToken = property(getCurrentToken)
 
     def getPrevToken(self):
         return self._prevToken
+
     prevToken = property(getPrevToken)
 
     def rewind(self):
@@ -87,6 +92,7 @@ class Tokenizer:
 
         return result
 
+
 if False:
     for x in Tokenizer(" 1 + 2+3+a"):
         print(x)
@@ -100,6 +106,7 @@ if False:
 
 from functools import singledispatch
 
+
 @singledispatch
 def accept(kind, tokenizer):
     assert isinstance(tokenizer, Tokenizer)
@@ -107,6 +114,7 @@ def accept(kind, tokenizer):
         next(tokenizer)
         return True
     return False
+
 
 @accept.register(str)
 def _(str, tokenizer):
@@ -116,6 +124,7 @@ def _(str, tokenizer):
         return True
     return False
 
+
 @accept.register(tuple)
 def _(tuplet, tokenizer):
     assert isinstance(tokenizer, Tokenizer)
@@ -124,14 +133,17 @@ def _(tuplet, tokenizer):
         return True
     return False
 
+
 import operator
+
 Operator = {
-    '+' : operator.add,
-    '-' : operator.sub,
-    '*' : operator.mul,
-    '/' : operator.truediv,
-    '^' : operator.pow
+    '+': operator.add,
+    '-': operator.sub,
+    '*': operator.mul,
+    '/': operator.truediv,
+    '^': operator.pow
 }
+
 
 def parseExpr(tokenizer):
     """
@@ -145,6 +157,7 @@ def parseExpr(tokenizer):
         result = apply(result, expr1)
 
     return result
+
 
 def parseTerm(tokenizer):
     """
@@ -162,6 +175,7 @@ def parseTerm(tokenizer):
 
     return result
 
+
 def parseFactor(tokenizer):
     """
     implements F -> L [ ‘^’ F ]
@@ -178,6 +192,7 @@ def parseFactor(tokenizer):
         result = apply(result, factor)
 
     return result
+
 
 def parseLiteral(tokenizer):
     """
@@ -199,6 +214,7 @@ def parseLiteral(tokenizer):
     raise SyntaxError("syntax error at ^{}{} was expecting a factor"
                       .format(tokenizer.currentToken, tokenizer.remainingString))
 
+
 def parse2(str):
     result = None
     try:
@@ -217,6 +233,7 @@ def parse2(str):
         raise SyntaxError("syntax error at ^{}{} in expression"
                           .format(tokenizer.currentLiteral, tokenizer.remainingString))
     return result
+
 
 count = 0
 
@@ -260,16 +277,19 @@ count += 1
 assert parse2('3 + x^3')(x=3) == 30
 print('ok {}'.format(count))
 
-def bezier3(t, a, b, c, d):
-    return (1-t)**3*a + 3*(1-t)**2*t*b + 3*(1-t)*t**2*c + t**3*d
 
-a = {'t' : 0.1,
-     'a' : Vector2(120, 160),
-     'b' : Vector2(35, 200),
-     'c' : Vector2(220, 260),
-     'd' : Vector2(220, 40)}
+def bezier3(t, a, b, c, d):
+    return (1 - t) ** 3 * a + 3 * (1 - t) ** 2 * t * b + 3 * (1 - t) * t ** 2 * c + t ** 3 * d
+
+
+a = {'t': 0.1,
+     'a': Vector2(120, 160),
+     'b': Vector2(35, 200),
+     'c': Vector2(220, 260),
+     'd': Vector2(220, 40)}
 f = parse2('(1-t)^3*a + 3*(1-t)^2*t*b + 3*(1-t)*t^2*c + t^3*d')
 assert f(**a) == bezier3(**a)
+
 
 def arange(start, stop, step):
     x = start
@@ -277,14 +297,17 @@ def arange(start, stop, step):
         yield x
         x += step
 
+
 # test bezier curve in full range
 
 def g(t):
     # print('t=', t)
     return f(t=t, a=Vector2(120, 160),
-         b=Vector2(35, 200),
-         c=Vector2(220, 260),
-         d=Vector2(220, 40))
+             b=Vector2(35, 200),
+             c=Vector2(220, 260),
+             d=Vector2(220, 40))
+
+
 for x in map(g, arange(0, 1, 0.1)):
     print(x)
 
@@ -338,6 +361,7 @@ def parse(expr):
 
     assert False, "invalid condition"
 
+
 x = parse("1+2")
 assert x == 3
 
@@ -348,10 +372,10 @@ f = parse('x+1')
 assert f(x=2) == 3
 
 f = parse('x+y+z')
-assert f(x=2,y=2,z=3) == 7
+assert f(x=2, y=2, z=3) == 7
 
 f = parse('x+y+x')
-assert f(x=2,y=3) == 7
+assert f(x=2, y=3) == 7
 
 print('parse is ok')
 
