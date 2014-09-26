@@ -5,6 +5,8 @@ def parseCkt(cktfile):
 
     lib = {}
 
+    fh = open(cktfile, "rt")
+
     with open(cktfile, "rt") as fh:
         for line in fh:
 

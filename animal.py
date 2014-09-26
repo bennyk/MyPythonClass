@@ -44,4 +44,6 @@ def generateAnimal(n):
     return result
 
 for x in generateAnimal(3):
+    assert isinstance(x, Animal)
+    x.showAffection()
     x.speak_twice()
